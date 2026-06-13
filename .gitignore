@@ -1,0 +1,26 @@
+# Environment and secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environment
+.venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Airflow
+airflow/simple_auth_manager_passwords.json.generated
+airflow/airflow.db
+
+# OS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/

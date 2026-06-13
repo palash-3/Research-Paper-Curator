@@ -1,0 +1,67 @@
+[project]
+name = "research-paper-curator"
+version = "0.1.0"
+description = "Production-grade AI research assistant for arXiv papers"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    # Web framework and server / install in production
+    "fastapi>=0.136.3",        # API endpoints
+    "uvicorn>=0.49.0",         # ASGI server to run FastAPI
+
+    # Database
+    "sqlalchemy>=2.0.50",      # ORM for PostgreSQL
+    "alembic>=1.18.4",         # Database migrations
+    "psycopg2-binary>=2.9.12", # PostgreSQL driver
+
+    # Search
+    "opensearch-py>=3.2.0",    # OpenSearch client for BM25 + vector search
+
+    # HTTP and config
+    "httpx>=0.28.1",           # Async HTTP client for Jina AI, Ollama, Telegram
+    "pydantic-settings>=2.14.1", # Typed config from .env file
+
+    # Data ingestion
+    "arxiv>=4.0.0",            # arXiv API client
+    "docling>=2.102.1",        # Scientific PDF parser
+
+    # AI and agents
+    "langgraph>=1.2.5",        # Agent workflow orchestration
+    "langchain-core>=1.4.7",   # LangChain primitives used by LangGraph
+    "langfuse>=4.7.1",         # RAG pipeline monitoring and tracing
+
+    # Caching
+    "redis>=8.0.0",            # Redis client for caching
+
+    # Bot and UI
+    "python-telegram-bot>=22.8", # Telegram bot framework
+    "gradio>=6.18.0",          # Web UI for RAG interface
+]
+
+[dependency-groups] #only install in dev server only
+dev = [
+    # Testing
+    "pytest>=9.0.3",           # Testing framework
+
+    # Code quality
+    "ruff>=0.15.17",           # Linter and formatter
+    "mypy>=2.1.0",             # Static type checker
+
+    # Development
+    "jupyter>=1.1.1",          # Notebooks for experimentation
+    "pre-commit>=4.6.0",       # Git hooks for code quality
+]
+
+[tool.ruff]
+line-length = 100              # max characters per line
+select = [
+    "E",   # basic code style errors
+    "F",   # unused imports, undefined variables
+    "I",   # import statements organization
+    "UP",  # outdated Python syntax
+]
+
+[tool.mypy]
+python_version = "3.13"        # Python version to check against
+strict = true                  # enable ALL type checks
+ignore_missing_imports = true  # don't error on libraries without type hints
