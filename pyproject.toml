@@ -53,13 +53,10 @@ dev = [
 ]
 
 [tool.ruff]
-line-length = 100              # max characters per line
-select = [
-    "E",   # basic code style errors
-    "F",   # unused imports, undefined variables
-    "I",   # import statements organization
-    "UP",  # outdated Python syntax
-]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
 
 [tool.mypy]
 python_version = "3.13"        # Python version to check against
