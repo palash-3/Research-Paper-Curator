@@ -19,10 +19,15 @@ logger = logging.getLogger(__name__)
 
 
 class ArxivClient:
-    """Thin wrapper around the `arxiv` package with retry + date filtering."""
+    """Thin wrapper around arxiv package with retry + date filtering."""
 
-    RATE_LIMIT_SECONDS = 3.0
-    MAX_RETRIES = 3
+    RATE_LIMIT_SECONDS = 3.0  # no more than one request every 3 seconds.
+    MAX_RETRIES = 3  # retry up to 3 times
+
+    """By building self._client in __init__ rather than fresh inside
+    fetch_recent_papers() every time, the same rate-limited client gets
+    reused if you call fetch_recent_papers() multiple times on one
+    ArxivClient instance — slightly more efficient."""
 
     def __init__(self) -> None:
         self._client = arxiv.Client(
@@ -31,10 +36,6 @@ class ArxivClient:
         )
 
     def fetch_recent_papers(self, days_back: int = 7) -> list[arxiv.Result]:
-        """
-        Fetch papers from the configured categories published in the
-        last `days_back` days, newest first.
-        """
         categories = settings.arxiv_categories.split(",")
         query = " OR ".join(f"cat:{c.strip()}" for c in categories)
 
@@ -52,15 +53,10 @@ class ArxivClient:
             for result in self._client.results(search):
                 published_naive = result.published.replace(tzinfo=None)
                 if published_naive < cutoff:
-                    # Results are sorted newest-first, so once we hit
-                    # something older than the cutoff, everything after
-                    # is also too old — safe to stop early.
                     break
                 papers.append(result)
+
         except Exception:
-            # Log and return whatever we already collected, rather than
-            # losing an entire day's run because the connection dropped
-            # partway through.
             logger.exception("arXiv fetch interrupted after %d papers", len(papers))
 
         logger.info("Fetched %d papers from arXiv (days_back=%d)", len(papers), days_back)
