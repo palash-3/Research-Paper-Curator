@@ -18,6 +18,9 @@ __pycache__/
 airflow/simple_auth_manager_passwords.json.generated
 airflow/airflow.db
 
+# Downloaded data (PDFs cached locally, not committed)
+data/pdfs/
+
 # OS
 .DS_Store
 
