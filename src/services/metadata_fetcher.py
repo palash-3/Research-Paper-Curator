@@ -1,3 +1,4 @@
+import gc
 import logging
 
 from sqlalchemy.orm import Session
@@ -63,5 +64,8 @@ class MetadataFetcher:
                 self.db.rollback()
                 logger.exception("Failed to save paper %s", arxiv_id)
                 failed += 1
+            finally:
+                del full_text
+                gc.collect()
 
         return {"saved": saved, "skipped": skipped, "failed": failed}

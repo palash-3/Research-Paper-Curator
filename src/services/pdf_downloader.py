@@ -23,7 +23,7 @@ def download_pdf(pdf_url: str, arxiv_id: str) -> Path | None:
     try:
         response = httpx.get(pdf_url, timeout=30.0, follow_redirects=True)
         response.raise_for_status()
-    except httpx.HTTPError:
+    except Exception:
         logger.exception("Failed to download PDF for %s", arxiv_id)
         return None
 
